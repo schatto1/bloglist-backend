@@ -1,3 +1,5 @@
+const _ = require('lodash')
+
 const totalLikes = (blogs) => {
   return blogs.map(blog => blog.likes).reduce((sum, current) => sum + current, 0)
 }
