@@ -34,6 +34,22 @@ const mostBlogs = (blogs) => {
 }
 
 const mostLikes = (blogs) => {
+  if (blogs.length === 0) {
+    return {}
+  }
+
+  const authors = _.groupBy(blogs, "author")
+
+  const authorLikes = Object.keys(authors).map( key => {
+    return {
+      author: key,
+      likes : authors[key].reduce( (sum, element) => sum + element['likes'], 0)
+    }
+  })
+
+  const mostLikesAuthor = _.maxBy(authorLikes, 'likes')
+
+  return mostLikesAuthor
 
 }
 
