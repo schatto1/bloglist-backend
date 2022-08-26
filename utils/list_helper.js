@@ -12,8 +12,30 @@ const favoriteBlog = (blogs) => {
     : blogs.find(blog => blog.likes === maxValue)
 }
 
+const mostBlogs = (blogs) => {
+  if (blogs.length === 0) {
+    return {}
+  }
+
+  const authors = _.groupBy(blogs, "author")
+
+  Object.keys(authors).forEach( (key) => {
+    authors[key] = authors[key].length
+  })
+
+  const mostBlogAuthor = _.max(Object.keys(authors), author => authors[author])
+
+  const mostBlogsObject = {
+    author: mostBlogAuthor,
+    blogs: authors[mostBlogAuthor]
+  }
+
+  return mostBlogsObject
+}
+
 module.exports = {
   totalLikes,
-  favoriteBlog
+  favoriteBlog,
+  mostBlogs
 }
 
