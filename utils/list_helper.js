@@ -33,9 +33,14 @@ const mostBlogs = (blogs) => {
   return mostBlogsObject
 }
 
+const mostLikes = (blogs) => {
+
+}
+
 module.exports = {
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 }
 
