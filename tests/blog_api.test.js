@@ -26,6 +26,10 @@ test('all blog posts are returned', async () => {
   expect(response.body).toHaveLength(helper.initialBlogs.length)
 })
 
+test('blog posts have unique identifier property "id"', async () => {
+  
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
