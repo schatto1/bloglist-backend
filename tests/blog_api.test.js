@@ -20,6 +20,12 @@ test('blogs are returned as json', async () => {
     .expect('Content-Type', /application\/json/)
 })
 
+test('all blog posts are returned', async () => {
+  const response = await api.get('/api/blogs')
+
+  expect(response.body).toHaveLength(helper.initialBlogs.length)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
