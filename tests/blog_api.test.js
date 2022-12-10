@@ -27,7 +27,9 @@ test('all blog posts are returned', async () => {
 })
 
 test('blog posts have unique identifier property "id"', async () => {
-  
+  const response = await api.get('/api/blogs')
+
+  response.body.forEach(blog => expect(blog.id).toBeDefined())
 })
 
 afterAll(() => {
