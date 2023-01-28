@@ -55,6 +55,27 @@ test('POST request creates a new blog post', async () => {
   )
 })
 
+test('if likes missing, defaults to zero', async () => {
+  const newBlog = {
+    title: 'this blog post is missing likes',
+    author: "Likey McLikerson",
+    url: "added-by-test-again"
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+
+  const blogToView = blogsAtEnd[blogsAtEnd.length - 1]
+
+  expect(blogToView.likes).toEqual(0)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
