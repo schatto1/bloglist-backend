@@ -92,6 +92,22 @@ test('blogs without title is not added', async () => {
   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
 })
 
+test('blogs without url is not added', async () => {
+  const newBlog = {
+    title: "URL is missing from this",
+    author: "Missing McMisserson",
+    likes: 21
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
