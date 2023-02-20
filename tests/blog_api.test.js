@@ -143,7 +143,7 @@ describe('updating a blog', () => {
       title: 'This is an updated title'
     }
 
-    console.log("updatedBlogTitle", updatedBlogTitle)
+    // console.log("updatedBlogTitle", updatedBlogTitle)
 
     await api
       .put(`/api/blogs/${blogToUpdate.id}`)
