@@ -94,7 +94,6 @@ describe('addition of a new user', () => {
     expect(usersAtEnd).toHaveLength(usersAtStart.length)
   })
 
-  // TODO: add tests to test password requirement validation for user operations
   test('user creation fails if no password', async () => {
     const usersAtStart = await helper.usersInDb()
 
@@ -113,7 +112,6 @@ describe('addition of a new user', () => {
     expect(usersAtEnd).toHaveLength(usersAtStart.length)
   })
 
-  // TODO: add tests to test username length validation for user operations
   test('user creation fails if password not long enough', async () => {
     const usersAtStart = await helper.usersInDb()
 
