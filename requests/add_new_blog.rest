@@ -1,9 +1,9 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxvdGhlcmUiLCJpZCI6IjYzZjk1Y2Q3YzY2MmU2MWExY2NmMDdiMiIsImlhdCI6MTY3NzMwNjQ4OH0.XC_tWWGI71RKi3v5FrVsoC8Tjd5FMHjgWf1TDVfdU4s
+Authorization: Bearer <>
 
 {
-  "title": "This is a sixth blog post",
+  "title": "This is a seventh blog post",
   "author": "Oh Hai",
   "url": "sixth-blog",
   "likes": 1
