@@ -26,8 +26,23 @@ beforeEach(async () => {
     await user.save();
   }
 
+  const usersAtStart = await helper.usersInDb()
+  const currentUser = usersAtStart[0]
+
   await Blog.deleteMany({})
-  await Blog.insertMany(helper.initialBlogs)
+  for (initialBlog of helper.initialBlogs) {
+    const { title, author, url, likes } = initialBlog
+
+    const blog = new Blog({
+      title: title,
+      author: author,
+      url: url,
+      likes: likes || 0,
+      user: currentUser.id
+    })
+
+    await blog.save();
+  }
 })
 
 describe('when there is initially some blogs saved', () => {
@@ -180,11 +195,23 @@ describe('addition of a new blog', () => {
 
 describe('deletion of a blog', () => {
   test('succeeds with status code 204 if id is valid', async () => {
+    const user = {
+      username: "testy",
+      password: "testing"
+    }
+  
+    const auth = await api
+        .post('/api/login')
+        .send(user)
+    
+    const token = "Bearer " + auth.body.token
+
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
 
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', token)
       .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
