@@ -102,6 +102,23 @@ describe('addition of a new blog', () => {
       'this is a newly added blog post'
     )
   })
+
+  test('blog is not added when auth token missing', async () => {
+    const newBlog = {
+      title: 'this is a newly added blog post',
+      author: "Missing McMisserson",
+      url: "added-by-test-three",
+      likes: 21
+    }
+  
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(401)
+  
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+  })
   
   test('if likes missing, defaults to zero', async () => {
     const user = {
