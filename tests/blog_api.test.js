@@ -1,14 +1,31 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
+const bcrypt = require('bcrypt')
 
 const api = supertest(app)
 
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const helper = require('./test_helper')
 
 
 beforeEach(async () => {
+  await User.deleteMany({})
+  for (initialUser of helper.initialUsers) {
+    const { username, name, password } = initialUser
+
+    const passwordHash = await bcrypt.hash(password, 10)
+
+    const user = new User({
+      username,
+      name,
+      passwordHash,
+    })
+
+    await user.save();
+  }
+
   await Blog.deleteMany({})
   await Blog.insertMany(helper.initialBlogs)
 })
@@ -36,6 +53,18 @@ describe('when there is initially some blogs saved', () => {
 
 describe('addition of a new blog', () => {
   test('POST request creates a new blog post', async () => {
+    const user = {
+      username: "testy",
+      password: "testing"
+    }
+  
+    const auth = await api
+        .post('/api/login')
+        .send(user)
+    
+    const token = "Bearer " + auth.body.token
+
+
     const newBlog = {
       title: 'this is a newly added blog post',
       author: "Testy McTesterson",
@@ -46,6 +75,7 @@ describe('addition of a new blog', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set('Authorization', token)
       .expect(201)
       .expect('Content-Type', /application\/json/)
   
@@ -59,6 +89,17 @@ describe('addition of a new blog', () => {
   })
   
   test('if likes missing, defaults to zero', async () => {
+    const user = {
+      username: "testy",
+      password: "testing"
+    }
+  
+    const auth = await api
+        .post('/api/login')
+        .send(user)
+    
+    const token = "Bearer " + auth.body.token
+
     const newBlog = {
       title: 'this blog post is missing likes',
       author: "Likey McLikerson",
@@ -68,6 +109,7 @@ describe('addition of a new blog', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set('Authorization', token)
       .expect(201)
       .expect('Content-Type', /application\/json/)
   
@@ -80,6 +122,17 @@ describe('addition of a new blog', () => {
   })
   
   test('blogs without title is not added', async () => {
+    const user = {
+      username: "testy",
+      password: "testing"
+    }
+  
+    const auth = await api
+        .post('/api/login')
+        .send(user)
+    
+    const token = "Bearer " + auth.body.token
+
     const newBlog = {
       author: "Missing McMisserson",
       url: "added-by-test-three",
@@ -89,6 +142,7 @@ describe('addition of a new blog', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set('Authorization', token)
       .expect(400)
   
     const blogsAtEnd = await helper.blogsInDb()
@@ -96,6 +150,17 @@ describe('addition of a new blog', () => {
   })
   
   test('blogs without url is not added', async () => {
+    const user = {
+      username: "testy",
+      password: "testing"
+    }
+  
+    const auth = await api
+        .post('/api/login')
+        .send(user)
+    
+    const token = "Bearer " + auth.body.token
+
     const newBlog = {
       title: "URL is missing from this",
       author: "Missing McMisserson",
@@ -105,6 +170,7 @@ describe('addition of a new blog', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set('Authorization', token)
       .expect(400)
   
     const blogsAtEnd = await helper.blogsInDb()
@@ -135,6 +201,17 @@ describe('deletion of a blog', () => {
 
 describe('updating a blog', () => {
   test('blog title is properly updated', async () => {
+    const user = {
+      username: "testy",
+      password: "testing"
+    }
+  
+    const auth = await api
+        .post('/api/login')
+        .send(user)
+    
+    const token = "Bearer " + auth.body.token
+
     const blogsAtStart = await helper.blogsInDb()
     const blogToUpdate = blogsAtStart[0]
 
@@ -148,6 +225,7 @@ describe('updating a blog', () => {
     await api
       .put(`/api/blogs/${blogToUpdate.id}`)
       .send(updatedBlogTitle)
+      .set('Authorization', token)
       .expect(200)
       .expect('Content-Type', /application\/json/)
 
