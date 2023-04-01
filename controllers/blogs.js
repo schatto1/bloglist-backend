@@ -38,6 +38,8 @@ blogsRouter.delete('/:id', async (request, response) => {
 
   const blog = await Blog.findById(request.params.id)
 
+  console.log("current user for delete", user)
+
   if (blog.user.toString() === user.id.toString()) {
     await Blog.findByIdAndRemove(request.params.id)
     return response.status(204).end()
@@ -50,6 +52,8 @@ blogsRouter.put('/:id', async (request, response) => {
   const body = request.body
 
   const user = request.user
+
+  console.log("current user", user)
 
   const blog = {
     title: body.title,
